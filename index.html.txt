@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascend - La escalada social</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0b1120 0%, #19233c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .game-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(18, 25, 45, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 30px 40px -15px rgba(0,0,0,0.5), 0 0 0 2px rgba(120, 180, 255, 0.15) inset;
+            border: 1px solid rgba(210, 230, 255, 0.1);
+        }
+        /* Header perfil */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 8px 16px 8px 12px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+            border: 1px solid #2d3e6a;
+        }
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ffb347, #ff8c00);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            text-shadow: 0 2px 4px black;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+        }
+        .name-tag {
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+            letter-spacing: 0.3px;
+        }
+        .name-tag span {
+            font-size: 13px;
+            color: #99b8ff;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+        .settings-icon {
+            background: #1e2b48;
+            width: 38px;
+            height: 38px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #b3d0ff;
+            cursor: default;
+            border: 1px solid #3c5282;
+        }
+        /* Tabla líderes */
+        .leaderboard-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .leaderboard-header h3 {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            background: rgba(255,255,255,0.02);
+            padding: 6px 16px 6px 12px;
+            border-radius: 40px;
+            border: 1px solid #31486f;
+        }
+        .crown-icon {
+            font-size: 24px;
+        }
+        .friend-list {
+            background: #0f1829;
+            border-radius: 28px;
+            padding: 8px;
+            margin-bottom: 28px;
+            border: 1px solid #2f4570;
+            box-shadow: 0 8px 0 #060b14;
+        }
+        .friend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-radius: 40px;
+            background: #142239;
+            margin-bottom: 6px;
+        }
+        .friend-item:last-child {
+            margin-bottom: 0;
+        }
+        .friend-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1f3457;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+        .friend-info {
+            font-weight: 500;
+            color: white;
+        }
+        .friend-info small {
+            color: #98b1e6;
+            font-size: 13px;
+            font-weight: 400;
+            margin-left: 4px;
+        }
+        .friend-score {
+            background: #0a1120;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #ffd966;
+            font-weight: 700;
+            font-size: 18px;
+            border: 1px solid #546fa3;
+            box-shadow: inset 0 2px 3px #00000055;
+        }
+        .you-tag {
+            background: #ffd966;
+            color: #1a1f2f;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 30px;
+            margin-left: 10px;
+        }
+        /* Área de juego principal */
+        .game-area {
+            background: #0b1424;
+            border-radius: 48px;
+            padding: 24px 16px 24px;
+            border: 2px solid #384f7a;
+            box-shadow: inset 0 0 15px #00000077, 0 12px 0 #060a14;
+            margin-bottom: 18px;
+        }
+        .current-level {
+            text-align: center;
+            color: #cddfff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .big-number {
+            font-size: 80px;
+            font-weight: 800;
+            text-align: center;
+            color: #ffdb8e;
+            text-shadow: 0 5px 0 #8f6f2c, 0 8px 15px black;
+            line-height: 1;
+            margin: 8px 0 4px;
+        }
+        .click-button {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto 14px;
+            background: radial-gradient(circle at 30% 30%, #ffcf7a, #c97f10);
+            border-radius: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 0 #7a4f1a, 0 20px 30px black;
+            transition: all 0.08s ease;
+            cursor: pointer;
+            user-select: none;
+            border: 4px solid #ffbb4a;
+        }
+        .click-button:active {
+            transform: translateY(16px);
+            box-shadow: 0 4px 0 #7a4f1a, 0 12px 25px black;
+        }
+        .click-button span {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 0 #b45f1a, 0 0 15px #ffeeaa;
+        }
+        .action-hint {
+            color: #99b8e6;
+            text-align: center;
+            font-weight: 500;
+            margin: 12px 0 0;
+            background: #00000040;
+            padding: 8px;
+            border-radius: 60px;
+            font-size: 15px;
+        }
+        .invite-button {
+            background: #2277ee;
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 20px;
+            border-radius: 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 0 #0d3a7a, 0 6px 18px black;
+            cursor: pointer;
+            transition: all 0.08s ease;
+            border: 1px solid #88bbff;
+            margin-top: 12px;
+        }
+        .invite-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #0d3a7a, 0 10px 20px black;
+        }
+        .invite-button span {
+            font-size: 22px;
+        }
+        footer {
+            text-align: center;
+            color: #4e6592;
+            font-size: 13px;
+            margin-top: 20px;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Perfil / Inicio de sesión simulado -->
+        <div class="profile-row">
+            <div class="user">
+                <div class="avatar">👤</div>
+                <div class="name-tag">
+                    tú_username <span>#1204</span>
+                </div>
+            </div>
+            <div class="settings-icon">⚙️</div>
+        </div>
+        <!-- Tabla de clasificación AMIGOS (CORAZÓN DEL JUEGO) -->
+        <div class="leaderboard-header">
+            <h3>👥 AMIGOS · EN VIVO</h3>
+            <span class="crown-icon">🏆</span>
+        </div>
+        <div class="friend-list" id="friendList">
+            <!-- Los amigos se generan con JS debajo -->
+        </div>
+
+        <!-- Área de juego Ascend -->
+        <div class="game-area">
+            <div class="current-level">tu nivel actual</div>
+            <div class="big-number" id="playerLevel">5</div>
+            <!-- Botón central: pulsar para escalar -->
+            <div class="click-button" id="clickButton">
+                <span>⬆️</span>
+            </div>
+            <div class="action-hint" id="clickHint">⚡ Pulsa para escalar ⚡</div>
+        </div>
+
+        <!-- Botón de invitar (viral) -->
+        <button class="invite-button" id="inviteBtn">
+            <span>👥</span> INVITAR AMIGOS A ASCEND <span>🔥</span>
+        </button>
+        <footer>
+            Ascend · La cima es más divertida con amigos
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            // =====================================================
+            // SIMULACIÓN DE AMIGOS Y NIVELES
+            // =====================================================
+            const friendsData = [
+                { name: "Carlos", initialLevel: 12, avatar: "🎮" },
+                { name: "Ana", initialLevel: 9, avatar: "⚡" },
+                { name: "Luis", initialLevel: 6, avatar: "🔥" },
+                { name: "María", initialLevel: 15, avatar: "👑" },
+                { name: "Javi", initialLevel: 7, avatar: "🚀" }
+            ];
+
+            // Nivel actual del jugador (empieza en 5, como en diseño)
+            let playerCurrentLevel = 5;
+
+            // Referencias a elementos del DOM
+            const playerLevelSpan = document.getElementById('playerLevel');
+            const clickButton = document.getElementById('clickButton');
+            const clickHint = document.getElementById('clickHint');
+            const friendListDiv = document.getElementById('friendList');
+
+            // Función para renderizar la tabla de amigos
+            function renderFriends() {
+                let htmlStr = '';
+                friendsData.forEach(friend => {
+                    htmlStr += `
+                        <div class="friend-item">
+                            <div class="friend-left">
+                                <div class="friend-avatar">${friend.avatar}</div>
+                                <div class="friend-info">
+                                    ${friend.name} <small>· nivel</small>
+                                </div>
+                            </div>
+                            <div class="friend-score">${friend.initialLevel}</div>
+                        </div>
+                    `;
+                });
+                // Añadir al jugador mismo al final, con etiqueta "tú"
+                htmlStr += `
+                    <div class="friend-item" style="background:#1e3155; border: 1px solid #ffdb8e;">
+                        <div class="friend-left">
+                            <div class="friend-avatar" style="background:#b57c1e;">👤</div>
+                            <div class="friend-info" style="color:#ffdb8e;">
+                                tú <span class="you-tag">TÚ</span>
+                            </div>
+                        </div>
+                        <div class="friend-score" style="color:#ffffff; background:#2f3f68;" id="yourScoreDisplay">${playerCurrentLevel}</div>
+                    </div>
+                `;
+                friendListDiv.innerHTML = htmlStr;
+            }
+
+            // Actualiza solo tu nivel en la tabla (para no re-renderizar todo)
+            function updateYourLevelDisplay() {
+                const yourScoreSpan = document.getElementById('yourScoreDisplay');
+                if (yourScoreSpan) {
+                    yourScoreSpan.innerText = playerCurrentLevel;
+                }
+                playerLevelSpan.innerText = playerCurrentLevel;
+            }
+
+            // Mecánica: subir de nivel al hacer click
+            function handleClick() {
+                // Incrementa nivel
+                playerCurrentLevel++;
+                // Actualiza displays
+                playerLevelSpan.innerText = playerCurrentLevel;
+                updateYourLevelDisplay();
+
+                // Feedback rápido (opcional)
+                clickHint.innerText = '¡Has escalado! +1 nivel 💪';
+                setTimeout(() => {
+                    clickHint.innerText = '⚡ Pulsa para escalar ⚡';
+                }, 300);
+
+                // (Opcional: podrías simular que un amigo sube de vez en cuando,
+                //  pero lo dejamos simple y adictivo.)
+            }
+
+            // Función para simular invitación (viral)
+            function inviteFriends() {
+                alert('📲 ¡Comparte este enlace con tus amigos!\n\nhttps://tusitio.github.io/Ascend/ \n\n¡Que vean quién es el mejor!');
+                // Aquí podrías abrir un enlace real de compartir, pero con alert es más simple y claro.
+                // En el futuro, se podría implementar Web Share API.
+            }
+
+            // =====================================================
+            // INICIALIZAR JUEGO
+            // =====================================================
+            function initGame() {
+                // Renderiza la lista de amigos fija (más tú)
+                renderFriends();
+
+                // Configurar evento click en el botón de escalar
+                clickButton.addEventListener('click', handleClick);
+
+                // Botón de invitar
+                const inviteBtn = document.getElementById('inviteBtn');
+                inviteBtn.addEventListener('click', inviteFriends);
+
+                // Para evitar doble scroll o problemas táctiles
+                // Aseguramos nivel inicial en displays
+                playerLevelSpan.innerText = playerCurrentLevel;
+            }
+
+            // Arrancar cuando el DOM esté listo
+            window.addEventListener('DOMContentLoaded', initGame);
+        })();
+    </script>
+</body>
+</html>
